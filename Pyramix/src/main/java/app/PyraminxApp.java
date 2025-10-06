@@ -4,13 +4,12 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.Move;
 import model.Pyraminx;
+import view.PyraminxView;
 
 public class PyraminxApp extends Application {
     private final Pyraminx cube = new Pyraminx();
@@ -64,10 +63,10 @@ public class PyraminxApp extends Application {
         VBox root = new VBox(10, topRow, moveRow, modeRow, seqRow, new Label("State:"), log, canvas);
         root.setPadding(new Insets(10));
 
-        btnReset.setOnAction(e -> { cube.resetSolved(); writeState("Reset to solved."); drawPyraminx(); updateUndoRedoButtons(btnUndo, btnRedo); });
-        btnScramble.setOnAction(e -> { cube.scramble(20); writeState("Scrambled 20 random moves."); drawPyraminx(); updateUndoRedoButtons(btnUndo, btnRedo); });
-        btnUndo.setOnAction(e -> { cube.undo(); writeState("Undo"); drawPyraminx(); updateUndoRedoButtons(btnUndo, btnRedo); });
-        btnRedo.setOnAction(e -> { cube.redo(); writeState("Redo"); drawPyraminx(); updateUndoRedoButtons(btnUndo, btnRedo); });
+        btnReset.setOnAction(e -> { cube.resetSolved(); writeState("Reset to solved."); PyraminxView.drawPyraminx(cube, canvas); updateUndoRedoButtons(btnUndo, btnRedo); });
+        btnScramble.setOnAction(e -> { cube.scramble(20); writeState("Scrambled 20 random moves."); PyraminxView.drawPyraminx(cube, canvas); updateUndoRedoButtons(btnUndo, btnRedo); });
+        btnUndo.setOnAction(e -> { cube.undo(); writeState("Undo"); PyraminxView.drawPyraminx(cube, canvas); updateUndoRedoButtons(btnUndo, btnRedo); });
+        btnRedo.setOnAction(e -> { cube.redo(); writeState("Redo"); PyraminxView.drawPyraminx(cube, canvas); updateUndoRedoButtons(btnUndo, btnRedo); });
 
         rbNormal.setOnAction(e -> tipOnlyMode = false);
         rbTipOnly.setOnAction(e -> {
@@ -75,19 +74,19 @@ public class PyraminxApp extends Application {
             System.out.println("Tip Only Mode: " + tipOnlyMode);
         });
 
-        btnR.setOnAction(e -> { cube.apply(Move.R, tipOnlyMode); writeState(tipOnlyMode ? "r" : "R"); drawPyraminx(); updateUndoRedoButtons(btnUndo, btnRedo); });
-        btnRprime.setOnAction(e -> { cube.apply(Move.R_PRIME, tipOnlyMode); writeState(tipOnlyMode ? "r'" : "R'"); drawPyraminx(); updateUndoRedoButtons(btnUndo, btnRedo); });
-        btnL.setOnAction(e -> { cube.apply(Move.L, tipOnlyMode); writeState(tipOnlyMode ? "l" : "L"); drawPyraminx(); updateUndoRedoButtons(btnUndo, btnRedo); });
-        btnLprime.setOnAction(e -> { cube.apply(Move.L_PRIME, tipOnlyMode); writeState(tipOnlyMode ? "l'" : "L'"); drawPyraminx(); updateUndoRedoButtons(btnUndo, btnRedo); });
-        btnU.setOnAction(e -> { cube.apply(Move.U, tipOnlyMode); writeState(tipOnlyMode ? "u" : "U"); drawPyraminx(); updateUndoRedoButtons(btnUndo, btnRedo); });
-        btnUprime.setOnAction(e -> { cube.apply(Move.U_PRIME, tipOnlyMode); writeState(tipOnlyMode ? "u'" : "U'"); drawPyraminx(); updateUndoRedoButtons(btnUndo, btnRedo); });
-        btnB.setOnAction(e -> { cube.apply(Move.B, tipOnlyMode); writeState(tipOnlyMode ? "b" : "B"); drawPyraminx(); updateUndoRedoButtons(btnUndo, btnRedo); });
-        btnBprime.setOnAction(e -> { cube.apply(Move.B_PRIME, tipOnlyMode); writeState(tipOnlyMode ? "b'" : "B'"); drawPyraminx(); updateUndoRedoButtons(btnUndo, btnRedo); });
+        btnR.setOnAction(e -> { cube.apply(Move.R, tipOnlyMode); writeState(tipOnlyMode ? "r" : "R"); PyraminxView.drawPyraminx(cube, canvas); updateUndoRedoButtons(btnUndo, btnRedo); });
+        btnRprime.setOnAction(e -> { cube.apply(Move.R_PRIME, tipOnlyMode); writeState(tipOnlyMode ? "r'" : "R'"); PyraminxView.drawPyraminx(cube, canvas); updateUndoRedoButtons(btnUndo, btnRedo); });
+        btnL.setOnAction(e -> { cube.apply(Move.L, tipOnlyMode); writeState(tipOnlyMode ? "l" : "L"); PyraminxView.drawPyraminx(cube, canvas); updateUndoRedoButtons(btnUndo, btnRedo); });
+        btnLprime.setOnAction(e -> { cube.apply(Move.L_PRIME, tipOnlyMode); writeState(tipOnlyMode ? "l'" : "L'"); PyraminxView.drawPyraminx(cube, canvas); updateUndoRedoButtons(btnUndo, btnRedo); });
+        btnU.setOnAction(e -> { cube.apply(Move.U, tipOnlyMode); writeState(tipOnlyMode ? "u" : "U"); PyraminxView.drawPyraminx(cube, canvas); updateUndoRedoButtons(btnUndo, btnRedo); });
+        btnUprime.setOnAction(e -> { cube.apply(Move.U_PRIME, tipOnlyMode); writeState(tipOnlyMode ? "u'" : "U'"); PyraminxView.drawPyraminx(cube, canvas); updateUndoRedoButtons(btnUndo, btnRedo); });
+        btnB.setOnAction(e -> { cube.apply(Move.B, tipOnlyMode); writeState(tipOnlyMode ? "b" : "B"); PyraminxView.drawPyraminx(cube, canvas); updateUndoRedoButtons(btnUndo, btnRedo); });
+        btnBprime.setOnAction(e -> { cube.apply(Move.B_PRIME, tipOnlyMode); writeState(tipOnlyMode ? "b'" : "B'"); PyraminxView.drawPyraminx(cube, canvas); updateUndoRedoButtons(btnUndo, btnRedo); });
         btnRunSeq.setOnAction(e -> {
             try {
                 cube.apply(seqField.getText());
                 writeState("Applied: " + seqField.getText());
-                drawPyraminx();
+                PyraminxView.drawPyraminx(cube, canvas);
                 updateUndoRedoButtons(btnUndo, btnRedo);
             } catch (Exception ex) {
                 log.appendText("Error: " + ex.getMessage() + "\n");
@@ -107,7 +106,7 @@ public class PyraminxApp extends Application {
             try {
                 cube.loadFromFile("pyraminx_save.json");
                 writeState("State loaded from file.");
-                drawPyraminx();
+                PyraminxView.drawPyraminx(cube, canvas);
                 updateUndoRedoButtons(btnUndo, btnRedo);
             } catch (Exception ex) {
                 log.appendText("Load error: " + ex.getMessage() + "\n");
@@ -117,99 +116,12 @@ public class PyraminxApp extends Application {
         updateUndoRedoButtons(btnUndo, btnRedo);
 
         writeState("Ready.");
-        drawPyraminx();
+        PyraminxView.drawPyraminx(cube, canvas);
         stage.setScene(new Scene(root, 720, 700));
         stage.show();
     }
 
-    private void drawPyraminx() {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        double size = 120;
-        double h = Math.sqrt(3) / 2 * size;
-        double cx = canvas.getWidth() / 2;
-        double cy = canvas.getHeight() / 2;
-
-        double topY = cy - h * 0.6;
-        drawFace(gc, cx - size, topY, size, 2, 0);     // Green (left)
-        drawFace(gc, cx, topY, size, 1, 0);            // Red (center)
-        drawFace(gc, cx + size, topY, size, 0, 180);   // Yellow (right, flipped)
-
-        double bottomY = cy + h * 0.6;
-        drawFace(gc, cx, bottomY, size, 3, -1);  // Blue (bottom, flipped both ways)
-    }
-
-    private void drawFace(GraphicsContext gc, double cx, double cy, double size, int face, double rot) {
-        double h = Math.sqrt(3) / 2 * size;
-        boolean flipHorizontal = (rot == 180);
-        boolean flipBoth = (rot == -1);
-
-        gc.save();
-        gc.translate(cx, cy);
-        if (flipHorizontal) {
-            gc.scale(-1, 1); // Flip horizontally only
-        } else if (flipBoth) {
-            gc.scale(-1, -1); // Flip both horizontally and vertically
-        }
-
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(2);
-        gc.strokePolygon(new double[]{0, -size/2, size/2}, new double[]{-h/2, h/2, h/2}, 3);
-
-        double s = size / 3;
-        double hs = Math.sqrt(3) / 2 * s;
-
-        // Draw tip
-        drawTriangle(gc, 0, -h/2 + hs/3, s, cube.getSticker(face, 0), false);
-
-        // Draw corners
-        drawTriangle(gc, -s/2, -h/2 + hs + hs/3, s, cube.getSticker(face, 1), false);
-        drawTriangle(gc, s/2, -h/2 + hs + hs/3, s, cube.getSticker(face, 2), false);
-
-        // Draw center
-        drawTriangle(gc, 0, -h/2 + hs * 1.33, s, cube.getSticker(face, 6), true);
-
-        // Draw bottom corners
-        drawTriangle(gc, -size/2 + s/2, -h/2 + 2*hs + hs/3, s, cube.getSticker(face, 3), false);
-        drawTriangle(gc, size/2 - s/2, -h/2 + 2*hs + hs/3, s, cube.getSticker(face, 5), false);
-
-        // Draw bottom centers
-        drawTriangle(gc, -s/2, -h/2 + 2*hs * 1.17, s, cube.getSticker(face, 7), true);
-        drawTriangle(gc, 0, -h/2 + 2*hs + hs/3, s, cube.getSticker(face, 4), false);
-        drawTriangle(gc, s/2, -h/2 + 2*hs * 1.17, s, cube.getSticker(face, 8), true);
-
-        gc.restore();
-    }
-
-    private void drawTriangle(GraphicsContext gc, double cx, double cy, double s,
-                              model.Color4 color, boolean inverted) {
-        double h = Math.sqrt(3) / 2 * s;
-        double[] xs, ys;
-
-        if (!inverted) {
-            xs = new double[]{cx, cx - s/2, cx + s/2};
-            ys = new double[]{cy - h/2, cy + h/2, cy + h/2};
-        } else {
-            xs = new double[]{cx, cx - s/2, cx + s/2};
-            ys = new double[]{cy + h/2, cy - h/2, cy - h/2};
-        }
-
-        gc.setFill(fxColor(color));
-        gc.fillPolygon(xs, ys, 3);
-        gc.setStroke(Color.BLACK);
-        gc.setLineWidth(1);
-        gc.strokePolygon(xs, ys, 3);
-    }
-
-    private Color fxColor(model.Color4 c) {
-        return switch (c) {
-            case YELLOW -> Color.YELLOW;
-            case RED -> Color.RED;
-            case GREEN -> Color.LIMEGREEN;
-            case BLUE -> Color.DODGERBLUE;
-        };
-    }
+    
 
     private void writeState(String header) {
         StringBuilder sb = new StringBuilder();

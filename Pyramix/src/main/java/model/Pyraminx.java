@@ -3,11 +3,14 @@ package model;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
-import static model.Move.*;
 import static model.Utils.rnd;
 
 /**
- * Pyraminx model with save/load functionality
+ * Student-friendly Pyraminx model.
+ * - 4 faces: 0:Y, 1:R, 2:G, 3:B
+ * - 6 global edges (ids 0..5), each has orientation 0/1
+ * - Each face holds 3 "edge slots" pointing to global edges (id + ori)
+ * - R, L, U moves permute tips, centers (orientations), and local 3-edge cycles
  */
 public class Pyraminx {
     public static final Color4[] FACE_COLOR = {
@@ -378,7 +381,7 @@ public class Pyraminx {
         applyWithoutHistory(moveToRedo, wasTipOnly);
     }
 
-    private Move getInverse(Move m) {
+    Move getInverse(Move m) {
         return switch (m) {
             case R -> Move.R_PRIME;
             case R_PRIME -> Move.R;
@@ -470,7 +473,18 @@ public class Pyraminx {
         return true;
     }
 
+    private void rotateTip(int face) { tipOri[face] = (tipOri[face] + 1) % 3; }
+    private void rotateCenter(int face) { centerOri[face] = (centerOri[face] + 1) % 3;}
+
     private void rCW() {
+        rotateTip(1);
+        rotateCenter(1);
+
+        cycle3Edges(
+                1, 0,
+                3, 2,
+                0, 1
+        );
         Color4 temp;
 
         temp = faces[1][5];
@@ -495,6 +509,7 @@ public class Pyraminx {
     }
 
     private void rTip(){
+        rotateTip(1);
         Color4 temp;
 
         temp = faces[1][5];
@@ -504,6 +519,14 @@ public class Pyraminx {
     }
 
     private void lCW() {
+        rotateTip(2);
+        rotateCenter(2);
+        cycle3Edges(
+                2, 0,
+                0, 2,
+                3, 1
+        );
+
         Color4 temp;
 
         temp = faces[1][3];
@@ -537,6 +560,14 @@ public class Pyraminx {
     }
 
     private void uCW() {
+        rotateTip(0);
+        rotateCenter(0);
+        cycle3Edges(
+                0, 0,
+                1, 2,
+                2, 1
+        );
+
         Color4 temp;
 
         temp = faces[1][0];
@@ -570,6 +601,13 @@ public class Pyraminx {
     }
 
     private void bCW() {
+        rotateTip(3);
+        rotateCenter(3);
+        cycle3Edges(
+                0, 0,
+                1, 2,
+                2, 1
+        );
         Color4 temp;
 
         temp = faces[0][3];
@@ -600,6 +638,21 @@ public class Pyraminx {
         faces[0][3] = faces[3][0];
         faces[3][0] = faces[2][3];
         faces[2][3] = temp;
+    }
+
+    private void cycle3Edges(int fA, int sA, int fB, int sB, int fC, int sC) {
+        int idA = faceEdgeId[fA][sA];
+        int idB = faceEdgeId[fB][sB];
+        int idC = faceEdgeId[fC][sC];
+
+        // A -> B
+        faceEdgeId[fB][sB] = idA;
+
+        // B -> C
+        faceEdgeId[fC][sC] = idB;
+
+        // C -> A
+        faceEdgeId[fA][sA] = idC;
     }
 
     public void solveTips() {
@@ -673,8 +726,7 @@ public class Pyraminx {
     public String faceSummary(int face) {
         return "Face " + face + " (" + FACE_COLOR[face].shortName() + ") " +
                 "[tip=" + tipOri[face] + ", ctr=" + centerOri[face] + "] " +
-                "edges=" + Arrays.toString(faceEdgeId[face]) +
-                " ori=" + Arrays.toString(faceEdgeOri[face]);
+                "edges=" + Arrays.toString(faceEdgeId[face]);
     }
 
     public String status() {
