@@ -1,39 +1,30 @@
 package model;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public enum Move {
-    R, R_PRIME, L, L_PRIME, U, U_PRIME;
+    R, R_PRIME, L, L_PRIME, U, U_PRIME, B, B_PRIME;
 
-    public static Move fromToken(String t){
-        if (t == null) throw new IllegalArgumentException("Null token");
-        String s = t.trim().toUpperCase();
-
-        return switch (s) {
-            // R moves
+    public static Move fromToken(String t) {
+        t = t.trim();
+        return switch (t) {
             case "R" -> R;
-            case "R'", "R_PRIME", "RPRIME" -> R_PRIME;
-
-            // L moves
+            case "R'" -> R_PRIME;
             case "L" -> L;
-            case "L'", "L_PRIME", "LPRIME" -> L_PRIME;
-
-            // U moves
+            case "L'" -> L_PRIME;
             case "U" -> U;
-            case "U'", "U_PRIME", "UPRIME" -> U_PRIME;
-
-            default -> throw new IllegalArgumentException("Unknown move token: \"" + t + "\"");
+            case "U'" -> U_PRIME;
+            case "B" -> B;
+            case "B'" -> B_PRIME;
+            default -> throw new IllegalArgumentException("Unknown move: " + t);
         };
     }
 
-    public static List<Move> parseSequence(String seq){
-        List<Move> out = new ArrayList<>();
-        if (seq == null || seq.isBlank()) return out;
-
+    public static List<Move> parseSequence(String seq) {
         String[] tokens = seq.trim().split("\\s+");
-        for(String tok : tokens){
-            if(tok == null || tok.isBlank()) continue;
+        List<Move> out = new ArrayList<>();
+        for (String tok : tokens) {
+            if (tok.isBlank()) continue;
             out.add(fromToken(tok));
         }
         return out;

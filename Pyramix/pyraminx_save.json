@@ -1,0 +1,24 @@
+{
+  "faces": [
+    ["RED", "YELLOW", "YELLOW", "BLUE", "YELLOW", "BLUE", "YELLOW", "YELLOW", "YELLOW"],
+    ["GREEN", "RED", "RED", "BLUE", "RED", "YELLOW", "RED", "RED", "RED"],
+    ["YELLOW", "GREEN", "GREEN", "YELLOW", "GREEN", "RED", "GREEN", "GREEN", "GREEN"],
+    ["GREEN", "BLUE", "BLUE", "RED", "BLUE", "GREEN", "BLUE", "BLUE", "BLUE"]
+  ],
+  "tipOri": [0, 0, 0, 0],
+  "centerOri": [0, 0, 0, 0],
+  "edgeOri": [0, 0, 0, 0, 0, 0],
+  "faceEdgeId": [
+    [0, 1, 2],
+    [0, 3, 4],
+    [1, 3, 5],
+    [2, 4, 5]
+  ],
+  "faceEdgeOri": [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0]
+  ],
+  "history": ["R", "R", "U_PRIME", "U_PRIME", "B_PRIME", "B_PRIME", "L", "L"]
+}
