@@ -33,3 +33,5 @@
         - Tip Only Mode: Only Moves Tip
     - Algorithm: Enter in a String of moves, then press Run Sequence to run it
 
+## Video Demo Link
+https://drive.google.com/file/d/1Kl-nqVJ1JnqSzXsm4dXzX6gdvfvjIKqL/view?usp=sharing
