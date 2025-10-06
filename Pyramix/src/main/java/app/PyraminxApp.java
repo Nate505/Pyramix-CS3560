@@ -228,7 +228,7 @@ public class PyraminxApp extends Application {
         btnRedo.setDisable(!cube.canRedo());
     }
 
-    public static void main(String[] args) {
+    public static void jumpStart(String[] args) {
         launch(args);
     }
 }
